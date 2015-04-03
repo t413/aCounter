@@ -1,0 +1,10 @@
+.DS_Store
+.idea/
+build/
+
+CMakeCache.txt
+CMakeFiles/
+MakeFile
+*.cmake
+
+!generic-gcc-avr.cmake
