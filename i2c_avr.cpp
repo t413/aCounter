@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 #include "Arduino.h"
-#include <Wire.h>
 #include <avr/pgmspace.h>
 #include <avr/io.h>
 
