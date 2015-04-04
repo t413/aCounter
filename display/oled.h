@@ -7,23 +7,22 @@ class Font;
 
 class oled {
     i2c_avr &i2c_;
-    Font* font_;
+    Font& font_;
     uint16_t address_;
 
 public:
-    oled(i2c_avr &i2c, Font* font=NULL, uint16_t address=0x3C);
+    oled(i2c_avr &i2c, Font& font, uint16_t address=0x3C);
     void init();
 
-    void setFont(Font* font);
+    void setFont(Font& font);
 
     void send_cmd(uint8_t command);
     void send_byte(uint8_t val);
 
     void clearDisplay();
-    void setXY(uint16_t row, uint16_t col);
+    void setRowCol(uint16_t row, uint16_t col);
     void drawChar(char c);
-    void sendStr(char *string);
-
+    void print(char *string);
     void print(char const* fmt, ... );
 };
 

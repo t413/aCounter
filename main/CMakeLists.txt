@@ -1,6 +1,6 @@
 project(main)
 
-include_directories(${lib_SOURCE_DIR})
+include_directories(${acounter_lib_SOURCE_DIR})
 include_directories(${display_SOURCE_DIR})
 
 add_avr_executable(

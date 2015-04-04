@@ -1,7 +1,6 @@
 #include "fonts.h"
 
 #include <stdlib.h>
-#include "Arduino.h"
 #include <avr/pgmspace.h>
 
 uint8_t Font5x7::getCharWidth(char c) { return 7; }

@@ -17,6 +17,8 @@ int16_t adc_read(uint8_t mux);
 #if F_CPU == 16000000L
 #define ADC_PRESCALER ((1<<ADPS2) | (1<<ADPS1))
 #elif F_CPU == 8000000L
+#define ADC_PRESCALER ((1<<ADPS2) | (1<<ADPS1))
+#elif F_CPU == 12000000L //12MHz -> division factor of 32
 #define ADC_PRESCALER ((1<<ADPS2) | (1<<ADPS0))
 #elif F_CPU == 4000000L
 #define ADC_PRESCALER ((1<<ADPS2))

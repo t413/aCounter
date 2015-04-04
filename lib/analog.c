@@ -1,14 +1,12 @@
 // Simple analog to digitial conversion
 
 #include <avr/io.h>
-#include <avr/pgmspace.h>
 #include <avr/interrupt.h>
-#include <stdint.h>
 #include "analog.h"
 #include "binary.h"
 
 
-static uint8_t aref = (1<<REFS0); // default to AREF = Vcc
+static uint8_t aref = 1; // default to AREF = Vcc
 
 
 void analogReference(uint8_t mode) {
@@ -23,7 +21,7 @@ int16_t analogRead(uint8_t pin) {
 	// set the analog reference (high two bits of ADMUX) and select the
 	// channel (low 4 bits).  this also sets ADLAR (left-adjust result)
 	// to 0 (the default).
-	ADMUX = (aref << 6) | (pin & 0x07);
+	ADMUX = (aref << REFS0) | (pin & 0x07);
 
 	// start the conversion
 	ADCSRA |= (1 << ADSC);

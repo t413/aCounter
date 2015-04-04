@@ -11,6 +11,7 @@ public:
   uint8_t read(uint8_t ack);
   void writeReg(uint8_t add, uint8_t reg, uint8_t val) ;
 
+  int16_t  i2c_errors_count;
 protected:
   void rep_start(uint8_t address);
   void stop(void);
@@ -21,7 +22,6 @@ protected:
   size_t read_reg_to_buf(uint8_t add, uint8_t reg, void *buf, size_t size);
   
   uint32_t neutralizeTime;
-  int16_t  i2c_errors_count;
 };
 
 void swap_endianness(void *buf, size_t size);

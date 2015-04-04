@@ -6,5 +6,7 @@ add_avr_library(
    display
    oled.cpp
    oled.h
+   fonts.cpp
+   fonts.h
 )
 

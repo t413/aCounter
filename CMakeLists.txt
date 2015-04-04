@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(AVR_UPLOADTOOL avrdude)
-set(AVR_PROGRAMMER avrispmkII)
+set(AVR_PROGRAMMER usbasp)
 set(AVR_UPLOADTOOL_PORT usb)
 
 set(AVR_MCU atmega328p)

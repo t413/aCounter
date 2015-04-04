@@ -11,6 +11,7 @@ void timer0_init(void);
 unsigned long millis();
 unsigned long micros();
 void delay(unsigned long ms);
+void delayMicroseconds(unsigned int us);
 
 #ifdef __cplusplus
 }

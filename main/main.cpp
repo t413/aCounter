@@ -1,11 +1,24 @@
 #include <i2c_avr.h>
 #include <analog.h>
 #include <oled.h>
+#include <fonts.h>
 #include <interrupt_timer.h>
+#include <avr/io.h>
 
 #define abs(x) ((x > 0)? (x) : (-x))
 bool within(int16_t val, int16_t in, int16_t tollerance) {
   return abs(val - in) < tollerance;
+}
+
+void buzzz(int16_t freq = 1000, int16_t durationMs = 10) {
+    int16_t elapsed = 0;
+    while (elapsed < (durationMs * 1000)) {
+        PORTB |= (1 << 1);
+        delayMicroseconds(freq);
+        PORTB &= ~(1 << 1);
+        delayMicroseconds(freq);
+        elapsed += freq * 2 + 1;
+    }
 }
 
 struct Button {
@@ -22,16 +35,20 @@ struct Button {
     bool check(uint16_t val, uint32_t now_time) {
         bool b = within(val, trigger_value, 5);
         if (b && !value) { down = now_time; }
-        if (down && !b && value && ((now_time - down) > 10) && ((now_time - down) < 1000)) { presses++; }
-        if (down && b && value && ((now_time - down) > 1000)) { presses--; down = 0; }
+        if (down && !b && value && ((now_time - down) > 10) && ((now_time - down) < 1000)) { buzzz(100); presses++; }
+        if (down && b && value && ((now_time - down) > 1000)) { presses--; buzzz(1000); down = 0; }
         return ((value = b));
     }
 };
 
 int main() {
-    i2c_avr i2c;
-    oled lcd(i2c);
+    timer0_init();
+    DDRB |= (1<<1);
+    buzzz(500);
 
+    i2c_avr i2c;
+    Font5x7 font;
+    oled lcd(i2c, font);
     lcd.init();
 
     struct Button rb1(683,"hits"), rb2(768,"spits"), rb3(819,"averts"); // red buttons!
@@ -39,12 +56,15 @@ int main() {
     struct Button* buttons[] = { &rb1, &rb2, &rb3, &gb1, &gb2 };
 
     lcd.clearDisplay();
-    lcd.setXY(0,4);
+    lcd.setRowCol(4,0);
     lcd.print(rb1.name);
-    lcd.setXY(40,4);
+    lcd.setRowCol(4,40);
     lcd.print(rb2.name);
-    lcd.setXY(90,4);
+    lcd.setRowCol(4,90);
     lcd.print(rb3.name);
+    buzzz(250);
+
+
     // lcd.setCursor(0,4);
     // lcd.print("%s: %d. ", rb2.name.c_str(), rb2.presses);
     // lcd.setCursor(2,5);
@@ -63,11 +83,11 @@ int main() {
         for (uint8_t i=0; i<5; i++) { buttons[i]->check(ana, current); }
 
         //lcd.setTextSize(2);
-        lcd.setXY(0, 0);
+        lcd.setRowCol(0, 0);
         lcd.print("%d",rb1.presses);
-        lcd.setXY(54, 0);
+        lcd.setRowCol(0, 54);
         lcd.print("%d",rb2.presses);
-        lcd.setXY(100, 0);
+        lcd.setRowCol(0, 100);
         lcd.print("%d",rb3.presses);
     }
 
