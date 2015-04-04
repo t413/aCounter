@@ -10,18 +10,21 @@ static uint8_t aref = 1; // default to AREF = Vcc
 
 
 void analogReference(uint8_t mode) {
-	aref = mode & 0xC0;
+	aref = mode & 0x03;
 }
 
 
 
 int16_t analogRead(uint8_t pin) {
-	uint8_t low, high;
+	uint8_t low = 0, high = 0;
+
+	ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); //setup prescaler
+	ADCSRA |= (1 << ADEN); //enable adc
 
 	// set the analog reference (high two bits of ADMUX) and select the
 	// channel (low 4 bits).  this also sets ADLAR (left-adjust result)
 	// to 0 (the default).
-	ADMUX = (aref << REFS0) | (pin & 0x07);
+	ADMUX = ((aref & 0x03) << REFS0) | (pin & 0x07);
 
 	// start the conversion
 	ADCSRA |= (1 << ADSC);

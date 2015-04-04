@@ -8,6 +8,7 @@ oled::oled(i2c_avr &i2c, Font& font, uint16_t address) :
     i2c_(i2c), font_(font), address_(address) { }
 
 void oled::init(){
+    i2c_.setSpeed(400000L);
     i2c_.init();
 
     send_cmd(0xae);    //display off
@@ -24,7 +25,7 @@ void oled::init(){
     send_cmd(0xa6);    // Set WHITE chars on BLACK backround
     // send_cmd(0xa7); // Set BLACK chars on WHITE backround
     send_cmd(0x81);    // 81 Setup CONTRAST CONTROL, following byte is the contrast Value
-    send_cmd(0xff);    // af contrast value between 1 ( == dull) to 256 ( == bright)
+    send_cmd(50);    // af contrast value between 1 ( == dull) to 256 ( == bright)
     delay(20);
     send_cmd(0xaf);    //display on
     delay(20);
@@ -33,13 +34,12 @@ void oled::init(){
 void oled::setFont(Font& f) { font_ = f; }
 
 void oled::send_cmd(uint8_t command) {
-    i2c_.setSpeed(400000L);
     i2c_.writeReg(address_, 0x80, (uint8_t)command);
 }
 
 void oled::send_byte(uint8_t val) {
-    i2c_.setSpeed(400000L);
     i2c_.writeReg(address_, 0x40, (uint8_t)val);
+    column_++;
 }
 
 void oled::clearDisplay() {
@@ -52,6 +52,7 @@ void oled::clearDisplay() {
 }
 
 void oled::setRowCol(uint16_t row, uint16_t col) {
+    row_ = row; column_ = col;
     send_cmd(0xb0+row);                //set page address
     send_cmd(0x00+(8*col&0x0f));       //set low col address
     send_cmd(0x10+((8*col>>4)&0x0f));  //set high col address
@@ -59,7 +60,7 @@ void oled::setRowCol(uint16_t row, uint16_t col) {
 
 void oled::drawChar(char c) {
     uint8_t cwidth = font_.getCharWidth(c);
-//  uint8_t cheight = font->getCharHeight(c);
+    //uint8_t cheight = font.getCharHeight(c);
     for (uint8_t i=0; i<cwidth; i++) {
         uint16_t b = font_.getCharVerticalBitmask(c, i);
         //Todo support next vertical column for 2xHeight chars
@@ -70,7 +71,7 @@ void oled::drawChar(char c) {
 void oled::print(char *string) {
     while (*string) {
         drawChar(*string);
-        *string += 1;
+        string++;
     }
 }
 

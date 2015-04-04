@@ -57,29 +57,16 @@ int main() {
 
     lcd.clearDisplay();
     lcd.setRowCol(4,0);
-    lcd.print(rb1.name);
-    lcd.setRowCol(4,40);
-    lcd.print(rb2.name);
-    lcd.setRowCol(4,90);
-    lcd.print(rb3.name);
+    lcd.print(rb1.name);//hits
+    lcd.setRowCol(4,10);
+    lcd.print(rb2.name);//spits
+    lcd.setRowCol(4,20);
+    lcd.print(rb3.name);//averts
     buzzz(250);
-
-
-    // lcd.setCursor(0,4);
-    // lcd.print("%s: %d. ", rb2.name.c_str(), rb2.presses);
-    // lcd.setCursor(2,5);
-    // lcd.print("%s: %d. ", rb3.name.c_str(), rb3.presses);
-    // lcd.setCursor(7,0);
-    // lcd.print("%s: %d. ", gb1.name.c_str(), gb1.presses);
-    // lcd.setCursor(7,8);
-    // lcd.print("%s: %d. ", gb2.name.c_str(), gb2.presses);
-
-    // lcd.setCursor(6,0);
-    // lcd.print("at: %ld.", current >> 8);
 
     while (1) {
         uint32_t current = millis();
-        uint16_t ana = analogRead(3);
+        int16_t ana = analogRead(3);
         for (uint8_t i=0; i<5; i++) { buttons[i]->check(ana, current); }
 
         //lcd.setTextSize(2);
@@ -89,6 +76,11 @@ int main() {
         lcd.print("%d",rb2.presses);
         lcd.setRowCol(0, 100);
         lcd.print("%d",rb3.presses);
+
+        lcd.setRowCol(5,0);
+        lcd.print("a: %d.", ana);
+        lcd.setRowCol(6,0);
+        lcd.print("at: %ld.", current >> 10);
     }
 
     // lcd.drawLine(0, 0, 127, 63, WHITE);

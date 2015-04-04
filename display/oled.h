@@ -9,6 +9,7 @@ class oled {
     i2c_avr &i2c_;
     Font& font_;
     uint16_t address_;
+    uint8_t row_, column_;
 
 public:
     oled(i2c_avr &i2c, Font& font, uint16_t address=0x3C);
@@ -21,6 +22,7 @@ public:
 
     void clearDisplay();
     void setRowCol(uint16_t row, uint16_t col);
+
     void drawChar(char c);
     void print(char *string);
     void print(char const* fmt, ... );
